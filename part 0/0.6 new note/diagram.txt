@@ -1,0 +1,10 @@
+title New note
+
+note over Browser: 
+    add new note into notes
+    re render the note list
+end note
+
+Browser->Server: HTTP POST /exampleapp/new_note_spa
+note over Server: servers saves the new note
+Server->Browser: "{"message":"note created"}"
