@@ -1,0 +1,13 @@
+title A user creates a new note
+Browser->Server: HTTP POST /exampleapp/new_note
+Server->Browser: 302 (redirect) /exampleapp/notes
+Browser->Server: HTTP GET /exampleapp/notes
+Server->Browser: HTML
+note over Browser: start rendering
+Browser->Server: HTTP GET /exampleapp/main.css
+Server->Browser: main.css
+Browser->Server: HTTP GET /exampleapp/main.js
+Server->Browser: main.js
+Browser->Server: HTTP GET /exampleapp/data.json
+Server->Browser: data.json
+note over Browser: render data list

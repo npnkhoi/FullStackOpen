@@ -1,0 +1,10 @@
+title Single page app
+
+Browser->Server: HTTP GET /exampleapp/spa
+Server->Browser: HTML
+note over Browser: start rendering
+Browser->Server: HTTP GET /exampleapp/spa.js
+Server->Browser: spa.js
+Browser->Server: HTTP GET /exampleapp/data.json
+Server->Browser: data.json
+note over Browser: render data list
