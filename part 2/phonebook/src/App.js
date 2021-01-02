@@ -2,22 +2,21 @@ import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
-import axios from 'axios'
+import PersonServices from './services/person'
 
 const App = () => {
-  const [ persons, setPersons ] = useState() 
+  const [ persons, setPersons ] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ filter, setFilter ] = useState('')
 
   useEffect(() => {
-    console.log("effect")
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
+    PersonServices
+      .getAll()
+      .then(data => {
+        setPersons(data)
       })
-  },[])
+  }, [])
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -25,7 +24,14 @@ const App = () => {
     if (persons.map((person) => person.name).includes(newName)) {
       window.alert(`${newName} is already in the list`)
     } else {
-      setPersons(persons.concat(newPerson))
+      PersonServices
+        .create(newPerson)
+        .then(ret => {
+          setPersons(persons.concat(ret))
+        })
+        .catch((err) => {console.log(err);})
+
+      
     }
     setNewName('')
     setNewNumber('')
