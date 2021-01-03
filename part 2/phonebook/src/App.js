@@ -3,12 +3,15 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import PersonServices from './services/person'
+import Notification from './components/Notification'
 
 const App = () => {
   const [ persons, setPersons ] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ filter, setFilter ] = useState('')
+  const [ message, setMessage ] = useState(null)
+  const [ messageType, setMessageType ] = useState('NEUTRAL')
 
   useEffect(() => {
     PersonServices
@@ -17,6 +20,16 @@ const App = () => {
         setPersons(data)
       })
   }, [])
+
+  const notify = (content, type) => {
+    setMessage(content)
+    setMessageType(type)
+    
+    setTimeout(() => {
+      setMessage(null)
+      setMessageType('NEUTRAL')
+    }, 5000);
+  }
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -32,6 +45,7 @@ const App = () => {
         PersonServices
           .update(id, {...newPerson, id})
           .then(response => {
+            notify('Updated successfully', 'SUCCESS')
             setPersons(persons.map(person => (person.id === id ? response.data : person)))
           })
       }
@@ -41,6 +55,7 @@ const App = () => {
         .create(newPerson)
         .then(ret => {
           setPersons(persons.concat(ret))
+          notify('Added successfully', 'SUCCESS')
         })
         .catch((err) => {console.log(err);})
     }
@@ -55,12 +70,17 @@ const App = () => {
         .then(ret => {
           setPersons(persons.filter(person => person.id !== id))
         })
+        .catch(err => {
+          console.log(err);
+          notify('This person is deleted in the server. Please reload this page.', 'ERROR')
+        })
     }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} type={messageType} />
       <Filter filter={filter} setFilter={setFilter}/>
       <h2>Add a new person</h2>
       <PersonForm newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} addPerson={addPerson} />
