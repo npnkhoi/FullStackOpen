@@ -22,7 +22,20 @@ const App = () => {
     event.preventDefault()
     const newPerson = {name: newName, number: newNumber}
     if (persons.map((person) => person.name).includes(newName)) {
-      window.alert(`${newName} is already in the list`)
+      if (window.confirm(`${newName} is already in the list, do you want to modify this person?`)) {
+        let id
+        persons.forEach(person => {
+          if (person.name === newName) {
+            id = person.id
+          }
+        })
+        PersonServices
+          .update(id, {...newPerson, id})
+          .then(response => {
+            setPersons(persons.map(person => (person.id === id ? response.data : person)))
+          })
+      }
+      
     } else {
       PersonServices
         .create(newPerson)
@@ -30,11 +43,19 @@ const App = () => {
           setPersons(persons.concat(ret))
         })
         .catch((err) => {console.log(err);})
-
-      
     }
     setNewName('')
     setNewNumber('')
+  }
+
+  const removePerson = (id) => {
+    if (window.confirm("Do you really want to delete this person?")) {
+      PersonServices
+        .remove(id)
+        .then(ret => {
+          setPersons(persons.filter(person => person.id !== id))
+        })
+    }
   }
 
   return (
@@ -44,7 +65,7 @@ const App = () => {
       <h2>Add a new person</h2>
       <PersonForm newName={newName} setNewName={setNewName} newNumber={newNumber} setNewNumber={setNewNumber} addPerson={addPerson} />
       <h2>Numbers</h2>
-      <Persons persons={persons} filter={filter}/>
+      <Persons persons={persons} filter={filter} removePerson={removePerson}/>
     </div>
   )
 }

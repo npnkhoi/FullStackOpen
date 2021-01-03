@@ -1,9 +1,14 @@
 import Person from './Person'
 
-const Persons = ({persons, filter}) => {
+const Persons = ({persons, filter, removePerson}) => {
   return persons
     .filter(({name}) => name.includes(filter))
-    .map((person) => <Person key={person.name} person={person} />)
+    .map((person) => (
+      <div key={person.name}>
+        <Person person={person} removePerson={removePerson}/>
+        <button onClick={() => removePerson(person.id)}>Delete</button>
+      </div>
+    ))
 }
 
 export default Persons
