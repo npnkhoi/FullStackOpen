@@ -28,7 +28,7 @@ const App = () => {
     setTimeout(() => {
       setMessage(null)
       setMessageType('NEUTRAL')
-    }, 5000);
+    }, 10000);
   }
 
   const addPerson = (event) => {
@@ -42,11 +42,16 @@ const App = () => {
             id = person.id
           }
         })
+        newPerson.id = id
         PersonServices
-          .update(id, {...newPerson, id})
+          .update(id, newPerson)
           .then(response => {
             notify('Updated successfully', 'SUCCESS')
-            setPersons(persons.map(person => (person.id === id ? response.data : person)))
+            setPersons(persons.map(person => (person.id === id ? newPerson : person)))
+          })
+          .catch(err => {
+            const errorMessage = err.response.data.error
+            notify(JSON.stringify(errorMessage), 'ERROR')
           })
       }
       
