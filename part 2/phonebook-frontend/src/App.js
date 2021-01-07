@@ -62,7 +62,11 @@ const App = () => {
           setPersons(persons.concat(ret))
           notify('Added successfully', 'SUCCESS')
         })
-        .catch((err) => {console.log(err);})
+        .catch((err) => {
+          console.log(err);
+          const errorMessage = err.response.data.error
+          notify(JSON.stringify(errorMessage), 'ERROR')
+        })
     }
     setNewName('')
     setNewNumber('')
