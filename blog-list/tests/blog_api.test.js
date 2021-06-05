@@ -62,6 +62,11 @@ describe('check properties', () => {
   })
 })
 
+test('fails with status code 400 if id is invalid', async () => {
+  const fakeId = '123';
+  await api.get(`/api/blogs/${fakeId}`).expect(400)
+})
+
 
 afterAll(() => {
   mongoose.connection.close()
