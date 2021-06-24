@@ -1,18 +1,7 @@
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { useState } from "react"
-
-const TextInput = ({value, setValue}) => {
-  return (
-    <input
-      type='text'
-      value={value}
-      onChange={(e) => {
-        setValue(e.target.value)
-        console.log(value);
-      }}
-    />
-  )
-}
+import { ADD_BOOK } from "../queries";
+import TextInput from "./TextInput";
 
 const AddBooks = () => {
   
@@ -22,14 +11,6 @@ const AddBooks = () => {
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
 
-  const ADD_BOOK = gql`
-    mutation($title: String!, $author: String!, $published: Int!, $genres: [String!]!) {
-      addBook (title: $title, author:$author, published: $published, genres: $genres ) {
-        title,
-        author
-      }
-    }
-    `
     const [addBook] = useMutation(ADD_BOOK)
 
   const submitGenre = (e) => {
